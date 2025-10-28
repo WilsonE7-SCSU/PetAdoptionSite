@@ -6,7 +6,7 @@ const path = require('path');
 // User data in JSON format goes here (I'm following the format I used in CSC235)
 let userData = {
 	"users":[
-	    {"fname": "John", "lname": "Sample", "username": "testUser1000101", "password": "P455w0rd"}
+	    {"fname": "John", "lname": "Sample", "type":"petOwner", "username": "testUser1000101", "password": "P455w0rd"}
 	]
 };
 
