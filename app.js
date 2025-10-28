@@ -57,10 +57,10 @@ const myServer = http.createServer(function(req, res) {
 		/*
 		We want at least 4 pages for now:
 		1. Login screen (default, "/login", "/")
-		2. Signup screen ("/signup")
-		3. Page to show a selection of pets to pet owners ("/pets")
-		4. A profile page that can dynamically change depending
+		2. Page to show a selection of pets to pet owners ("/pets")
+		3. A profile page that can dynamically change depending
 		   on which pet was chosen ("/profiles?name=<name>")
+		4. A request form that can be submitted to the server
 		(Also, if anyone wants to edit this to include error checking,
 		I would be very grateful! I got points off for that on previous assignments...)
 		*/
