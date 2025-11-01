@@ -1,0 +1,33 @@
+{
+    "pets":[
+        {"id":0, "name":"Koromaru", "age":5, "location":"Tatsumi Port Island, Japan", "category":"dogs", "img":"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Cream_shiba_inu_dllu.jpg/200px-Cream_shiba_inu_dllu.jpg"},
+        {"id":1, "name":"Bear", "age":2, "location":"Stratford, CT", "category":"dogs", "img":"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Wilma_vuxen.jpg/164px-Wilma_vuxen.jpg"},
+        {"id":2, "name":"Hunter", "age":9, "location":"New Haven, CT", "category":"dogs", "img":"https://images.pexels.com/photos/28683174/pexels-photo-28683174/free-photo-of-happy-labrador-retriever-portrait-in-tunisia.jpeg?auto=compress&cs=tinysrgb&w=800"},
+        {"id":3, "name":"Caleb", "age":6, "location":"Patterson, NY", "category":"dogs", "img":"https://images.pexels.com/photos/7752793/pexels-photo-7752793.jpeg?auto=compress&cs=tinysrgb&w=800"},
+        {"id":4, "name":"Shadow", "age":6, "location":"Anchorage, AK", "category":"dogs", "img":"https://images.pexels.com/photos/29881327/pexels-photo-29881327/free-photo-of-siberian-husky-dog-with-striking-blue-eyes.jpeg?auto=compress&cs=tinysrgb&w=800"},
+        {"id":5, "name":"Ace", "age":4, "location":"Las Vegas, NV", "category":"dogs", "img":"https://images.pexels.com/photos/825947/pexels-photo-825947.jpeg?auto=compress&cs=tinysrgb&w=800"},
+        {"id":6, "name":"Bella", "age":1, "location":"Lancaster, PA", "category":"dogs", "img":"https://images.pexels.com/photos/15824643/pexels-photo-15824643/free-photo-of-cute-fluffy-dog-on-wood-in-nature.png?auto=compress&cs=tinysrgb&w=800"},
+        {"id":7, "name":"Lola", "age":5, "location":"Freeport, ME", "category":"dogs", "img":"https://images.pexels.com/photos/17407385/pexels-photo-17407385/free-photo-of-cute-pomeranian-puppy.jpeg?auto=compress&cs=tinysrgb&w=800"},
+        {"id":8, "name":"Zoe", "age":8, "location":"White Plains, NY", "category":"dogs", "img":"https://images.pexels.com/photos/179221/pexels-photo-179221.jpeg?auto=compress&cs=tinysrgb&w=800"},
+
+        {"id":9, "name":"Morgana", "age":2, "location":"Shibuya, Tokyo", "category":"cats", "img":"https://images.pexels.com/photos/16482820/pexels-photo-16482820/free-photo-of-close-up-of-a-head-of-a-cat.jpeg?auto=compress&cs=tinysrgb&w=800"},
+        {"id":10, "name":"Sophia", "age":8, "location":"Patterson, NY", "category":"cats", "img":"https://images.pexels.com/photos/6133175/pexels-photo-6133175.jpeg?auto=compress&cs=tinysrgb&w=800"},
+        {"id":11, "name":"Cleo", "age":6, "location":"Fairfield, CT", "category":"cats", "img":"https://images.pexels.com/photos/179237/pexels-photo-179237.jpeg?auto=compress&cs=tinysrgb&w=800"},
+        {"id":12, "name":"Tiger", "age":3, "location":"Milford, CT", "category":"cats", "img":"https://images.pexels.com/photos/160722/cat-tiger-getiegert-feel-at-home-160722.jpeg?auto=compress&cs=tinysrgb&w=800"},
+        {"id":13, "name":"Milo", "age":5, "location":"Portland, ME", "category":"cats", "img":"https://images.pexels.com/photos/51439/pexels-photo-51439.jpeg?auto=compress&cs=tinysrgb&w=800"},
+        {"id":14, "name":"Oreo", "age":7, "location":"Newark, NJ", "category":"cats", "img":"https://images.pexels.com/photos/179222/pexels-photo-179222.jpeg?auto=compress&cs=tinysrgb&w=800"},
+        {"id":15, "name":"Gandalf", "age":9, "location":"Hobbiton, NZ", "category":"cats", "img":"https://images.pexels.com/photos/4790612/pexels-photo-4790612.jpeg?auto=compress&cs=tinysrgb&w=800"},
+        {"id":16, "name":"Loki", "age":4, "location":"New York, NY",   "category":"cats", "img":"https://images.pexels.com/photos/29787865/pexels-photo-29787865/free-photo-of-playful-gray-cat-in-sunlight-portrait.jpeg?auto=compress&cs=tinysrgb&w=800"},
+        {"id":17, "name":"Domino", "age":3, "location":"Hartford, CT", "category":"cats", "img":"https://images.pexels.com/photos/27651353/pexels-photo-27651353/free-photo-of-close-up-white-kitten-standing-playing.jpeg?auto=compress&cs=tinysrgb&w=800"},
+
+        {"id":18, "name":"Genbu", "age":100, "location":"Shibuya, Tokyo", "category":"turtles", "img":"https://images.pexels.com/photos/28257370/pexels-photo-28257370/free-photo-of-turtle.jpeg?auto=compress&cs=tinysrgb&w=800"},
+        {"id":19, "name":"Bowser", "age":40, "location":"Redmond, WA", "category":"turtles", "img":"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Tortue_floride_france.JPG/250px-Tortue_floride_france.JPG"},
+        {"id":20, "name":"Mikey", "age":15, "location":"Brooklyn, NY", "category":"turtles", "img":"https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Snapping_Turtle_Heinz.png/250px-Snapping_Turtle_Heinz.png"},
+        {"id":21, "name":"Donatello", "age":15, "location":"Brooklyn, NY", "category":"turtles", "img":"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Common_Snapping_Turtle_Close_Up.jpg/220px-Common_Snapping_Turtle_Close_Up.jpg"},
+        {"id":22, "name":"Leonardo", "age":16, "location":"Brooklyn, NY", "category":"turtles", "img":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Terrapene_ornata_ornata.jpg/220px-Terrapene_ornata_ornata.jpg"},
+        {"id":23, "name":"Raphael", "age":15, "location":"Brooklyn, NY", "category":"turtles", "img":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Juvenile_Snapping_Turtle_IBSP.tif/lossy-page1-220px-Juvenile_Snapping_Turtle_IBSP.tif.jpg"},
+        {"id":24, "name":"Arcadia", "age":27, "location":"Seattle, WA", "category":"turtles", "img":"https://images.pexels.com/photos/10465645/pexels-photo-10465645.jpeg?auto=compress&cs=tinysrgb&w=800"},
+        {"id":25, "name":"Triton", "age":42, "location":"Honolulu, HI", "category":"turtles", "img":"https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Green_Sea_Turtle_swimming.jpg/250px-Green_Sea_Turtle_swimming.jpg"},
+        {"id":26, "name":"Elphaba", "age":20, "location":"Omaha, NE", "category":"turtles", "img":"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Common_Snapping_Turtle_in_Minnesota.jpg/250px-Common_Snapping_Turtle_in_Minnesota.jpg"}
+    ]
+}
