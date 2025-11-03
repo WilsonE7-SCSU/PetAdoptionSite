@@ -46,6 +46,7 @@ const myServer = http.createServer(function(req, res) {
 		    if(req.method !== "POST"){
 		        res.writeHead(405, {'content-type':'application/json'}); // 405 = method not allowed
 		        res.end(JSON.stringify({status:"fail", message:"POST required"}));
+			return;
 		    } else {
 		        handleLogin(req,res);
 		    }
@@ -62,9 +63,9 @@ const myServer = http.createServer(function(req, res) {
 			handleAdoptionRequest(urlObj.query, res);
 			break;
 		case "/":
-			sendFile("/login.html", res);
+			sendFile("/Homepage.html", res);
 		default:
-			sendFile("/login.html", res);
+			sendFile("/Homepage.html", res);
 			// Should probably be something else instead to handle errors
 	}
 });
@@ -166,20 +167,23 @@ function respond(res, status, message){
 }
 
 // Send static files
-//Amir: Issue with the line || let fname = "./public-html" + fPath; ||NEEDS TO CHANGE TO|| let fname = "./public_html" + fPath; ||BECAUSE|| the file directory uses an underscore 
+//Amir: (FIXED) Issue with the line || let fname = "./public-html" + fPath; ||NEEDS TO CHANGE TO|| let fname = "./public_html" + fPath; ||BECAUSE|| the file directory uses an underscore 
 function sendFile(fPath, res){
-	let fname = "./public-html" + fPath;
+	let fname = "./public_html" + fPath;
 	fs.readFile(fname, function(err, data) {
-		if (err)
+		if (err){
 			respond(res, 404, "File not found");
+			return;
+		}
 //Amir: Here you need to add return so the execution stops and headers are only sent once
 		else {
 			let ext = getContentType(fPath, res);
 			if (ext) {
 				res.writeHead(200, {'content-type': ext});
-				res.writeHead(data);
-//Amir: The line above sending the file content should just be res.write(data) the initial res.writeHead sets the HTTP headers already
+				res.write(data);
+//Amir: (FIXED) The line above sending the file content should just be res.write(data) the initial res.writeHead sets the HTTP headers already
 				res.end();
+				return;
 			}
 		}
 	});
