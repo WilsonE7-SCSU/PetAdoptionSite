@@ -40,6 +40,21 @@ const myServer = http.createServer(function(req, res) {
 		case "/login":
 			sendFile("/login.html", res);
 			break;
+//Amir's Code
+                case "/dologin":
+                        // only allow POST requests
+		    if(req.method !== "POST"){
+		        res.writeHead(405, {'content-type':'application/json'}); // 405 = method not allowed
+		        res.end(JSON.stringify({status:"fail", message:"POST required"}));
+		    } else {
+		        handleLogin(req,res);
+		    }
+		    break;
+//Clarification below:
+//"/dologin" handles POST login requests separately from other pages
+//It won’t interfere with /login, /pets, or /profiles because each case
+//checks urlObj.pathname individually. So its safe to add
+//Amir's Code ends
 		case "/signup":
 			sendFile("/signup.html", res);
 			break;
@@ -111,6 +126,38 @@ res.end();
 
 }
 
+//Amir's Login Function code
+function handleLogin(req, res){
+    let body="";
+
+    req.on("data", function(chunk){
+        body += chunk;
+    });
+
+    req.on("end", function(){
+        let data = new URLSearchParams(body);
+        let username = data.get("username");
+        let password = data.get("password");
+
+// simple error checking: username and password must exist
+	if(!username || !password){
+	    res.writeHead(400, {'content-type':'application/json'});
+	    res.end(JSON.stringify({status:"fail", message:"username and password required"}));
+	    return;
+	}
+
+        let found = userData.users.find(u => u.username === username && u.password === password);
+        if(found){
+            res.writeHead(200, {'content-type':'application/json'});
+            res.end(JSON.stringify({status:"ok"}));
+        } else {
+            res.writeHead(200, {'content-type':'application/json'});
+            res.end(JSON.stringify({status:"fail"}));
+        }
+    });
+}
+//Amir's Login Function ends
+
 // Respond to requests
 function respond(res, status, message){
 	res.writeHead(status, {'content-type':'text/plain'});
@@ -119,16 +166,19 @@ function respond(res, status, message){
 }
 
 // Send static files
+//Amir: Issue with the line || let fname = "./public-html" + fPath; ||NEEDS TO CHANGE TO|| let fname = "./public_html" + fPath; ||BECAUSE|| the file directory uses an underscore 
 function sendFile(fPath, res){
 	let fname = "./public-html" + fPath;
 	fs.readFile(fname, function(err, data) {
 		if (err)
 			respond(res, 404, "File not found");
+//Amir: Here you need to add return so the execution stops and headers are only sent once
 		else {
 			let ext = getContentType(fPath, res);
 			if (ext) {
 				res.writeHead(200, {'content-type': ext});
 				res.writeHead(data);
+//Amir: The line above sending the file content should just be res.write(data) the initial res.writeHead sets the HTTP headers already
 				res.end();
 			}
 		}
@@ -151,7 +201,11 @@ function getContentType(pathname, res) {
 			return "application/json";
 			break;
 		default:
-			respond(res, 400, "Unsupported file type");
+		// unknown file type error check
+    		    console.log("Unsupported file type requested:", path.extname(pathname));
+		    respond(res, 400, "Unsupported file type");
+    		    return null;
+
 	}
 }
 
