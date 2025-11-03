@@ -43,6 +43,9 @@ const myServer = http.createServer(function(req, res) {
 		case "/signup":
 			sendFile("/signup.html", res);
 			break;
+		case "/submit-adoption":
+			handleAdoptionRequest(urlObj.query, res);
+			break;
 		case "/":
 			sendFile("/login.html", res);
 		default:
@@ -53,6 +56,59 @@ const myServer = http.createServer(function(req, res) {
 
 // TODO: Creates and sends a pet's profile
 function getPetProfile(qObj, res){
+	let petName = qObj.name || "Unknown Pet";
+
+	let html = `
+	<html>
+	<head><title>${petName}'s Profile</title></head>
+	<body>
+		<h1>${petName}'s Profile</h1>
+		<p>Pet details would go here...</p>
+
+		<!-- Adoption Form -->
+		<h3>Adoption Request Form</h3>
+		<form action="/submit-adoption" method="GET">
+			<input type="hidden" name="pet" value="${petName}">
+			Your Name: <input type="text" name="fullname"><br>
+			Email: <input type="text" name="email"><br>
+			Phone: <input type="text" name="phone"><br>
+			Message: <textarea name="message"></textarea><br>
+			<input type="submit" value="Submit Adoption Request">
+		</form>
+
+		<br>
+		<a href="/pets">Back to Pets</a>
+	</body>
+	</html>
+	`;
+
+	res.writeHead(200, {'content-type': 'text/html'});
+	res.write(html);
+	res.end();
+}
+
+//handles adotption form submissions
+function handleAdoptionRequest(qObj, res){
+	let petName = qObj.pet || "unknown pet"
+	let userName = qObj.fullname || "unknown pet"
+
+// log request
+console.log("ADOPTION REQUEST for " + petName + " from " + userName);
+
+let html = `
+<html>
+<body>
+	<h2>Adoption Request Submitted!</h2>
+	<p>Your request for ${petName} has been sent to the shelter.</p>
+	<a href="/pets">Back to Pets</a>
+</body>
+</html>
+`;
+
+res.writeHead(200, {'content-type': 'text/html'});
+res.write(html);
+res.end();
+
 }
 
 // Respond to requests
