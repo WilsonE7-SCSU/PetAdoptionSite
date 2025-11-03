@@ -27,6 +27,6 @@ function loadImgs() {
             //tooltips[i].innerHTML = "Name: " + name + "<br>Age: " + age + "<br>Location: " + loc;
         }
     }
-    xhttp.open("GET", "json/pets.json");
+    xhttp.open("GET", "public_html/json/pets.json");
     xhttp.send();
 }
