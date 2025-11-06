@@ -61,43 +61,20 @@
             cursor: pointer;
         }
 
-        .split-button-container {
-            display: flex;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            width: 300px;
-        }
-                .split-button-option {
-            flex: 1;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
-            text-decoration: none;
-            color: white;
-            font-weight: bold;
-            font-size: 1.1em;
-            /* Ensures the anchor tags fill the space */
-            display: block;
-        }
-                        .login-option {
-            background-color: #007bff;
-            border-right: 1px solid #0056b3;
-        }
-
-        .login-option:hover {
-            background-color: #0056b3;
-        }
-
-        .signup-option {
+        .login-button {
             background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
         }
 
-        .signup-option:hover {
+        .login-button:hover {
             background-color: #218838;
-
-
         }
     </style>
 </head>
@@ -105,16 +82,7 @@
 
     <header class="header">
         <h1>Web of Homes</h1>
-         <div class="split-button-container">
-        //Link to the Login Page
-        <a href="login.html" class="split-button-option login-option">
-            Log In
-        </a>
-        //Link to the Sign-up Page
-        <a href="Sign-up.html" class="split-button-option signup-option">
-            Sign Up
-        </a>
-    </div>
+        <a href="/login.html" class="login-button">Log In</a>
     </header>
 
     <div class="banner">
@@ -134,3 +102,4 @@
 
 </body>
 </html>
+
