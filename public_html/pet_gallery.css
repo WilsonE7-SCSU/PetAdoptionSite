@@ -1,0 +1,88 @@
+/*Main Page and General Settings*/
+body {
+    background-color: skyblue;
+}
+
+h1 {
+    text-align: center;
+    font-size: 4em;
+    color: white;
+    text-shadow: 1px 1px 2px black, 0 0 40px gold, 0 0 10px goldenrod;
+}
+
+#nav {
+    float: left;
+    width: 30%;
+    align-content: center;
+}
+
+.button{
+    text-align: center;
+    background-color: gold;
+    font-size: 32px;
+    border: 2px outset;
+    margin: 0px 100px 60px;
+    width: 150px;
+    cursor: pointer;
+}
+.button:active {
+    border: 2px inset;
+}
+
+#img_container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    place-content: center;
+    border-left: 2px solid white;
+}
+
+#img_container > div {
+    text-align: center;
+    cursor: pointer;
+}
+img {
+    height: 150px;
+    width: auto;
+    margin: 5px;
+}
+
+.tooltip {
+    visibility: hidden;
+    width:fit-content;
+    background-color: black;
+    color: white;
+    padding: 5px;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+}
+#img_container > div:hover .tooltip {
+    visibility: visible;
+}
+
+/*Request Page*/
+textarea {
+    width: 400px;
+    height: 130px;
+    resize: none;
+}
+
+#form_img {
+    float: left;
+    height: 200px;
+    width: auto;
+    margin-right: 20px;
+}
+
+input[type=submit] {
+    text-align: center;
+    background-color: gold;
+    font-size: 20px;
+    border: 2px outset;
+    width: 100px;
+    cursor: pointer;
+}
+
+input[type=submit]:active {
+    border: 2px inset;
+}
