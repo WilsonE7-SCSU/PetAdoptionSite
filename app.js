@@ -37,7 +37,7 @@ const myServer = http.createServer(function(req, res) {
 		case "/profiles":
 			getPetProfile(urlObj.query, res);
 			break;
-		case "/login":
+		case "/login.html":
 			sendFile("/login.html", res);
 			break;
 //Amir's Code
@@ -56,8 +56,8 @@ const myServer = http.createServer(function(req, res) {
 //It won’t interfere with /login, /pets, or /profiles because each case
 //checks urlObj.pathname individually. So its safe to add
 //Amir's Code ends
-		case "/signup":
-			sendFile("/signup.html", res);
+		case "/Sign-up.html":
+			sendFile("/Sign-up.html", res);
 			break;
 		case "/submit-adoption":
 			handleAdoptionRequest(urlObj.query, res);
@@ -67,6 +67,7 @@ const myServer = http.createServer(function(req, res) {
 			break;
 		default:
 			sendFile("/Homepage.html", res);
+			break;
 			// Should probably be something else instead to handle errors
 	}
 });
