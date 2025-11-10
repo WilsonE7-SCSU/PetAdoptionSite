@@ -64,6 +64,7 @@ const myServer = http.createServer(function(req, res) {
 			break;
 		case "/":
 			sendFile("/Homepage.html", res);
+			break;
 		default:
 			sendFile("/Homepage.html", res);
 			// Should probably be something else instead to handle errors
@@ -106,7 +107,7 @@ function getPetProfile(qObj, res){
 //handles adotption form submissions
 function handleAdoptionRequest(qObj, res){
 	let petName = qObj.pet || "unknown pet"
-	let userName = qObj.fullname || "unknown pet"
+	let userName = qObj.fullname || "unknown user"
 
 // log request
 console.log("ADOPTION REQUEST for " + petName + " from " + userName);
