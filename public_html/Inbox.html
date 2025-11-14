@@ -1,1 +1,46 @@
 //Inbox Menu Landing Page + CSS
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Basic Inbox</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="inbox-container">
+        <h1>My Inbox</h1>
+        <div id="message-list"></div>
+        <form id="message-form">
+            <input type="text" id="message-input" placeholder="Type a message...">
+            <button type="submit">Send</button>
+        </form>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+   .inbox-container {
+    max-width: 500px;
+    margin: 20px auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+#message-list {
+    height: 300px;
+    overflow-y: scroll;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+.message {
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+}
+#message-form {
+    display: flex;
+}
+#message-input {
+    flex-grow: 1;
+    padding: 8px;
+}
