@@ -62,12 +62,6 @@ const myServer = http.createServer(function(req, res) {
 		case "/submit-adoption":
 			handleAdoptionRequest(urlObj.query, res);
 			break;
-		case "/create-profile":
-			sendFile("/create-profile.html", res);
-			break;
-		case "/submit-profile":
-			handleProfileCreation(req, res);
-			break;
 		case "/":
 			sendFile("/Homepage.html", res);
 			break;
@@ -134,48 +128,6 @@ res.write(html);
 res.end();
 
 }
-
-function handleProfileCreation(req, res) {
-	if (req.method ==="GET") {
-		//handle get request
-		let urlObj = url.parse(req.url, true);
-		let query = urlObj.query;
-
-		let petName = query.petName || "Unnamed Pet";
-		let petType = query.petType || "Unknown";
-		let petAge = query.petAge || "Unknown";
-		let petDescription = query.petDescription || "No description provided";
-
-		//new profile
-		console.log("NEW PET PROFILE CREATED:");
-		console.log("Name: " + petName);
-		console.log("Type: " + petType);
-		console.log("Age:  " + petAge);
-		console.log("Description: " + petDescription);
-
-		let html = `
-		<html>
-		<body>
-			<h2>Profile Created Successfully!</h2>
-			<p><strong>${petName}</strong> has been added to the system.</p>
-			<p>Type: ${petType}</p>
-			<p>Age: ${petAge}</p>
-			<p>Description: ${petDescription}</p>
-			<br>
-			<a href="/create-profile">Create Another Profile</a> |
-			<a href="/">Home</a>
-		<body>
-		</html>
-		`;
-
-		res.writeHead(200, {'content-type': 'text/html'});
-		res.write(html);
-		res.end();
-		} else {
-			//handle methods
-			respond(res, 405, "Method not allowed");
-		}
-	}
 
 //Amir's Login Function code
 function handleLogin(req, res){

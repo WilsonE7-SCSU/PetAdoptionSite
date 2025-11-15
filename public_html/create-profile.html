@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Create Pet Profile</title>
+</head>
+<body>
+	<h1>Create New Pet Profile</h1>
+	<p>For shelters only - create a new pet profile</p>
+	
+	<form action="/submit-profile" method="GET">
+		<label>Pet Name:</label><br>
+		<input type="text" name="petName" required><br><br>
+
+		<label>Pet Type:</label><br>
+		<input type="text" name="petType" placeholder="e.g., Dog, Cat, Rabbit" required><br><br>
+		
+		<label>Age:</label><br>
+                <input type="text" name="petAge" placeholder="e.g., 2 years, 5 months" required><br><br>
+
+		<label>Description:</label><br>
+                <textarea name="petDescription" rows="4" cols="50" placeholder="Describe the pets personality, needs, etc." required></textarea><br><br>
+
+		<label>Image URL (Its optional):</label><br>
+		<input type="text" name="petImage" placeholder="http://example.com/image.jpg"><br><br>
+
+		<input type="submit" value="Create Profile">
+	</form>
+
+	<br>
+	<a href="/">Back to Home</a>
+</body>
+</html>
