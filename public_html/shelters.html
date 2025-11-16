@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Web of Homes – Local Shelters</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+        }
+        .navbar {
+            background-color: #0056b3;
+            padding: 12px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        .nav-title {
+            font-size: 1.6em;
+            font-weight: bold;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 1em;
+            padding: 8px 14px;
+            border-radius: 4px;
+            transition: 0.2s ease;
+        }
+        .nav-links a:hover {
+            background-color: rgba(255,255,255,0.25);
+        }
+        .page-wrapper {
+            max-width: 800px;
+            margin: 25px auto;
+            padding: 0 15px 30px;
+        }
+        h2 {
+            margin-top: 10px;
+        }
+        .shelter-card {
+            background:#fff;
+            border-radius: 8px;
+            padding: 15px 18px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .shelter-name {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .shelter-info {
+            margin-top: 5px;
+            color:#555;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="nav-title">Web of Homes</div>
+        <div class="nav-links">
+            <a id="nav-home" href="#">Home</a>
+            <a id="nav-pets" href="#">Pets</a>
+            <a id="nav-inbox" href="#">Inbox</a>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <h2>Local Partner Shelters</h2>
+
+
+        <div class="shelter-card">
+            <div class="shelter-name">Happy Paws</div>
+            <div class="shelter-info">
+                Location: New Haven, CT<br>
+                Email: contact@happypaws.org
+            </div>
+        </div>
+
+        <div class="shelter-card">
+            <div class="shelter-name">Cozy Critters</div>
+            <div class="shelter-info">
+                Location: Hamden, CT<br>
+                Email: hello@cozycritters.org
+            </div>
+        </div>
+
+        <div class="shelter-card">
+            <div class="shelter-name">Forever Friends</div>
+            <div class="shelter-info">
+                Location: Hartford, CT<br>
+                Email: info@foreverfriends.org
+            </div>
+        </div>
+    </div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const username = params.get("username");
+const userId = params.get("userId");
+const userType = params.get("userType");
+
+function withParams(page) {
+    if (!username) return page;
+    return `${page}?username=${username}&userId=${userId || ""}&userType=${encodeURIComponent(userType || "")}`;
+}
+
+document.getElementById("nav-home").href = withParams("/Homepage.html");
+document.getElementById("nav-pets").href = withParams("/pets");
+document.getElementById("nav-inbox").href = withParams("/Inbox.html");
+</script>
+
+</body>
+</html>

@@ -1,52 +1,92 @@
 <!DOCTYPE html>
+<!--Amir: Updated to look better and be more cohesive-->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<!--Login Page for Web of Homes-->
-
-    <title>Login Page</title>
-	<!--CSS for the login page-->
+    <title>Web of Homes – Login</title>
     <style>
         body {
+            margin: 0;
             font-family: Arial, sans-serif;
+            background: #f7f7f7;
+        }
+
+        .navbar {
+            background-color: #0056b3;
+            padding: 12px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .nav-title {
+            font-size: 1.6em;
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 1em;
+            padding: 8px 14px;
+            border-radius: 4px;
+            transition: 0.2s ease-in-out;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255,255,255,0.25);
+        }
+
+        .page-wrapper {
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            background-color: #f4f4f4;
-            margin: 0;
+            min-height: calc(100vh - 64px);
+            padding: 20px;
         }
+
         .login-container {
             background-color: #fff;
-            padding: 20px;
+            padding: 25px 30px;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 360px;
             text-align: center;
         }
+
         .login-container h2 {
             margin-bottom: 20px;
             color: #333;
         }
+
         .form-group {
             margin-bottom: 15px;
             text-align: left;
         }
+
         .form-group label {
             display: block;
             margin-bottom: 5px;
             color: #555;
         }
+
         .form-group input[type="text"],
         .form-group input[type="password"] {
-            width: calc(100% - 22px); /* Account for padding and border */
+            width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
+            box-sizing: border-box;
         }
+
         .form-group input[type="submit"] {
-            background-color: #007bff;
+            margin-top: 10px;
+            background-color: #0056b3;
             color: white;
             padding: 10px 15px;
             border: none;
@@ -55,29 +95,79 @@
             font-size: 16px;
             width: 100%;
         }
+
         .form-group input[type="submit"]:hover {
-            background-color: #0056b3;
+            background-color: #003f82;
+        }
+
+        .link-row {
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+        .link-row a {
+            color: #0056b3;
+            text-decoration: none;
+        }
+
+        .link-row a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
-	<!--If this is redundant, feel free to delete it, but here is the basic login form, I'll incorporate the homepage banner at a future point-->
 <body>
-    <a href="Homepage.html">Back to the Homepage</a><br>
-    <div class="login-container">
-        <h2>Please Login</h2>
-        <form action="#" method="post">
-            <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Login">
-            </div>
-        </form>
+
+    <div class="navbar">
+        <div class="nav-title">Web of Homes</div>
+        <div class="nav-links">
+            <a href="/Sign-up.html">Sign Up</a>
+        </div>
     </div>
+
+    <div class="page-wrapper">
+        <div class="login-container">
+            <h2>Please Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Login">
+                </div>
+            </form>
+            <div class="link-row">
+                Don&rsquo;t have an account? <a href="/Sign-up.html">Sign up</a>
+            </div>
+        </div>
+    </div>
+<!--Amir's login script-->
+<script>
+document.getElementById("loginForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    let formData = new FormData(e.target);
+    let body = new URLSearchParams(formData);
+
+    let res = await fetch("/dologin", {
+        method: "POST",
+        body: body
+    });
+
+    let result = await res.json();
+
+    if (result.status === "ok") {
+        window.location.href =
+            `/Homepage.html?username=${encodeURIComponent(result.username)}&userId=${result.userId}&userType=${encodeURIComponent(result.userType)}`;
+    } else {
+        alert("Invalid login");
+    }
+});
+</script>
+
 </body>
 </html>

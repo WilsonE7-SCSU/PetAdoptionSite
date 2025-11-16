@@ -1,46 +1,141 @@
-//Inbox Menu Landing Page + CSS
-
+<!--Inbox Menu Landing Page (Adam I edited this heavily, it wasn't working -Amir)-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Basic Inbox</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Web of Homes – Inbox</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+        }
+
+        .navbar {
+            background-color: #0056b3;
+            padding: 12px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .nav-title {
+            font-size: 1.6em;
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 1em;
+            padding: 8px 14px;
+            border-radius: 4px;
+            transition: 0.2s ease-in-out;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255,255,255,0.25);
+        }
+
+        .page-wrapper {
+            max-width: 850px;
+            margin: 30px auto;
+            padding: 0 15px 30px;
+        }
+
+        #message-list {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 12px;
+        }
+
+        .msg-item {
+            padding: 14px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+
+        .msg-item:last-child {
+            border-bottom: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .msg-body {
+            margin-top: 12px;
+            padding: 12px;
+            background: #fafafa;
+            border-radius: 6px;
+        }
+
+        .reply-text {
+            width: 100%;
+            height: 80px;
+            padding: 10px;
+            resize: vertical;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        .send-reply-btn {
+            margin-top: 8px;
+            padding: 10px 16px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .send-reply-btn:hover {
+            background-color: #003f82;
+        }
+    </style>
 </head>
+
 <body>
-    <div class="inbox-container">
-        <h1>My Inbox</h1>
-        <div id="message-list"></div>
-        <form id="message-form">
-            <input type="text" id="message-input" placeholder="Type a message...">
-            <button type="submit">Send</button>
-        </form>
+
+    <div class="navbar">
+        <div class="nav-title">Web of Homes</div>
+        <div class="nav-links">
+            <a id="nav-home" href="#">Home</a>
+            <a id="nav-pets" href="#">Pets</a>
+            <a id="nav-inbox" href="#">Inbox</a>
+        </div>
     </div>
-    <script src="script.js"></script>
+
+    <div class="page-wrapper">
+        <h1>Your Messages</h1>
+
+        <div id="message-list"></div>
+
+    </div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const username = params.get("username");
+const userId = params.get("userId");
+const userType = params.get("userType");
+
+function withParams(page) {
+    return `${page}?username=${username}&userId=${userId}&userType=${userType}`;
+}
+
+document.getElementById("nav-home").href = withParams("/Homepage.html");
+document.getElementById("nav-pets").href = withParams("/pets");
+document.getElementById("nav-inbox").href = withParams("/Inbox.html");
+</script>
+
+<script src="js/Inbox_System.js"></script>
+
 </body>
 </html>
-
-   .inbox-container {
-    max-width: 500px;
-    margin: 20px auto;
-    border: 1px solid #ccc;
-    padding: 10px;
-}
-#message-list {
-    height: 300px;
-    overflow-y: scroll;
-    border-bottom: 1px solid #ccc;
-    margin-bottom: 10px;
-    padding: 10px;
-}
-.message {
-    padding: 5px;
-    border-bottom: 1px solid #eee;
-}
-#message-form {
-    display: flex;
-}
-#message-input {
-    flex-grow: 1;
-    padding: 8px;
-}
