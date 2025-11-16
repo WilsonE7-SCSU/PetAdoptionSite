@@ -2,6 +2,17 @@ const http = require('http');
 const fs = require('fs');
 const url = require('url');
 const path = require('path');
+//Amir: SQL connection
+const mysql = require('mysql2');
+
+const db = mysql.createConnection({
+    host: '35.229.109.115',
+    user: 'nodeuser330',
+    password: '<m|L{03zF3o9|vCY',
+    database: 'pet_db',
+    port: 3306
+});
+//ends
 
 // User data in JSON format goes here (I'm following the format I used in CSC235)
 let userData = {
@@ -56,6 +67,14 @@ const myServer = http.createServer(function(req, res) {
 //It won’t interfere with /login, /pets, or /profiles because each case
 //checks urlObj.pathname individually. So its safe to add
 //Amir's Code ends
+		case "/signup":
+    		    if (req.method === "POST") {
+        		handleSignup(req, res);
+    		    } else {
+        		res.writeHead(405);
+			res.end("Method Not Allowed");
+    		    }
+    		    break;
 		case "/Sign-up.html":
 			sendFile("/Sign-up.html", res);
 			break;
@@ -69,75 +88,281 @@ const myServer = http.createServer(function(req, res) {
 			handleProfileCreation(req, res);
 			break;
 		case "/":
-			sendFile("/Homepage.html", res);
+			sendFile("/login.html", res);
 			break;
+//Amir: request feature cases
+		case "/api/sendAdoptionRequest":
+			handleSendAdoptionRequest(req, res);
+			break;
+		case "/api/getInbox":
+			handleGetInbox(req, res, urlObj.query);
+			break;
+		case "/api/sendReply":
+			handleSendReply(req, res);
+			break;
+		case "/Inbox.html":
+			sendFile("/Inbox.html", res);
+			break;
+//end
+//Amir: routing static pages i made
+		case "/api/getUserProfile":
+			handleGetUserProfile(req, res, urlObj.query);
+			break;
+		case "/api/getShelters":
+			handleGetShelters(req, res);
+			break;
+//end
+		case "/api/createPet":
+    			handleCreatePet(req, res);
+    			break;
 		default:
-			sendFile("/Homepage.html", res);
+			sendFile(urlObj.pathname, res);
 			break;
+			//Amir: yea i updated this so we try to serve the file instead of forcing the homepage, was causing loading issues
 			// Should probably be something else instead to handle errors
 	}
 });
 
-// TODO: Creates and sends a pet's profile
-function getPetProfile(qObj, res){
-	let petName = qObj.name || "Unknown Pet";
+// TODO: Creates and sends a pet's profile (Amir: Updated to incorporate more pet info and also update style)
+function getPetProfile(qObj, res) {
+    let petName = qObj.name;
 
-	let html = `
-	<html>
-	<head><title>${petName}'s Profile</title></head>
-	<body>
-		<h1>${petName}'s Profile</h1>
-		<p>Pet details would go here...</p>
+    if (!petName) {
+        res.writeHead(400);
+        return res.end("Missing pet name");
+    }
 
-		<!-- Adoption Form -->
-		<h3>Adoption Request Form</h3>
-		<form action="/submit-adoption" method="GET">
-			<input type="hidden" name="pet" value="${petName}">
-			Your Name: <input type="text" name="fullname"><br>
-			Email: <input type="text" name="email"><br>
-			Phone: <input type="text" name="phone"><br>
-			Message: <textarea name="message"></textarea><br>
-			<input type="submit" value="Submit Adoption Request">
-		</form>
+    const sql = `
+        SELECT
+            p.*,
+            s.sName AS shelterName,
+            s.address AS shelterAddress,
+            s.email AS shelterEmail
+        FROM Pets p
+        LEFT JOIN Shelters s ON p.shelterId = s.shelterId
+        WHERE p.name = ?
+        LIMIT 1
+    `;
 
-		<br>
-		<a href="/pets">Back to Pets</a>
-	</body>
-	</html>
-	`;
+    db.query(sql, [petName], function(err, rows) {
+        if (err) {
+            console.log("DB error:", err);
+            res.writeHead(500);
+            return res.end("DB error");
+        }
 
-	res.writeHead(200, {'content-type': 'text/html'});
-	res.write(html);
-	res.end();
-}
+        if (rows.length === 0) {
+            res.writeHead(404);
+            return res.end("Pet not found");
+        }
 
-//handles adotption form submissions
-function handleAdoptionRequest(qObj, res){
-	let petName = qObj.pet || "unknown pet"
-	let userName = qObj.fullname || "unknown user"
+        let pet = rows[0];
 
-// log request
-console.log("ADOPTION REQUEST for " + petName + " from " + userName);
-
-let html = `
+        let html = `
+<!DOCTYPE html>
 <html>
+<head>
+    <title>${pet.name}'s Profile</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f4f9;
+        }
+
+        .navbar {
+            background-color: #0056b3;
+            padding: 15px 25px;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .pet-info, .shelter-info {
+            margin-top: 20px;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .btn {
+            margin-top: 20px;
+            padding: 12px;
+            width: 100%;
+            background: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #003f82;
+        }
+
+        .back-link {
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 15px;
+            color: #0056b3;
+        }
+    </style>
+</head>
+
 <body>
-	<h2>Adoption Request Submitted!</h2>
-	<p>Your request for ${petName} has been sent to the shelter.</p>
-	<a href="/pets">Back to Pets</a>
+
+<div class="navbar">
+    Web of Homes
+    <div>
+        <a href="/Homepage.html">Home</a>
+        <a href="/login.html">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+
+    <h1>${pet.name}'s Profile</h1>
+
+    <div class="pet-info">
+        <strong>Type:</strong> ${pet.petType || "N/A"}<br>
+        <strong>Age:</strong> ${pet.age || "N/A"}<br>
+        <strong>Description:</strong> ${pet.description || "No description available."}
+    </div>
+
+    <h3 style="margin-top: 30px;">Shelter Information</h3>
+
+    <div class="shelter-info">
+        <strong>Shelter Name:</strong> ${pet.shelterName || "N/A"}<br>
+        <strong>Address:</strong> ${pet.shelterAddress || "N/A"}<br>
+        <strong>Email:</strong> ${pet.shelterEmail || "N/A"}
+    </div>
+
+    <h3 style="margin-top: 30px;">Adoption Request Form</h3>
+
+    <form action="/submit-adoption" method="GET">
+    	<input type="hidden" name="pet" value="${pet.name}">
+    	<input type="hidden" name="userId" value="${qObj.userId}">
+    	<input type="hidden" name="username" value="${qObj.username}">
+
+    	<label>Your Name:</label>
+    	<input type="text" name="fullname" required>
+
+    	<label>Email:</label>
+    	<input type="email" name="email" required>
+
+    	<label>Phone:</label>
+    	<input type="tel" name="phone" required>
+
+    	<label>Message:</label>
+    	<textarea name="message" rows="4" required></textarea>
+
+    	<button class="btn" type="submit">Submit Adoption Request</button>
+    </form>
+
+
+    <a class="back-link" href="/pets">Back to Pets</a>
+</div>
+
 </body>
 </html>
 `;
 
-res.writeHead(200, {'content-type': 'text/html'});
-res.write(html);
-res.end();
+        res.writeHead(200, { "content-type": "text/html" });
+        res.end(html);
+    });
+}
 
+
+//handles adotption form submissions (updated)
+function handleAdoptionRequest(qObj, res){
+    let petName = qObj.pet;
+    let senderId = parseInt(qObj.userId);   // logged-in pet owner
+    let userName = qObj.username;           // logged-in username
+
+    let email = qObj.email;
+    let phone = qObj.phone;
+    let userMsg = qObj.message;
+
+    let fullMsg = `
+Adoption Request
+-----------------------
+From: ${userName}
+Email: ${email}
+Phone: ${phone}
+
+Pet: ${petName}
+
+Message:
+${userMsg}
+-----------------------
+`;
+
+    db.query(
+        "SELECT petId, shelterId FROM Pets WHERE name = ? LIMIT 1",
+        [petName],
+        (err, rows) => {
+            if (rows.length === 0) return;
+
+            let petId = rows[0].petId;
+            let shelterId = rows[0].shelterId;
+
+            db.query(
+                "INSERT INTO Messages (senderId, recipientID, petId, msgText, formName) VALUES (?, ?, ?, ?, ?)",
+                [senderId, shelterId, petId, fullMsg, null],
+                () => {}
+            );
+
+            res.writeHead(200, {'content-type':'text/html'});
+            res.end(`<h2>Adoption Request Submitted!</h2>
+                     <a href="/pets">Back to Pets</a>`);
+        }
+    );
 }
 
 function handleProfileCreation(req, res) {
 	if (req.method ==="GET") {
-		//handle get request
 		let urlObj = url.parse(req.url, true);
 		let query = urlObj.query;
 
@@ -146,7 +371,6 @@ function handleProfileCreation(req, res) {
 		let petAge = query.petAge || "Unknown";
 		let petDescription = query.petDescription || "No description provided";
 
-		//new profile
 		console.log("NEW PET PROFILE CREATED:");
 		console.log("Name: " + petName);
 		console.log("Type: " + petType);
@@ -172,12 +396,11 @@ function handleProfileCreation(req, res) {
 		res.write(html);
 		res.end();
 		} else {
-			//handle methods
 			respond(res, 405, "Method not allowed");
 		}
 	}
 
-//Amir's Login Function code
+//Amir's Login and signup Function code (updated to work using SQL)
 function handleLogin(req, res){
     let body="";
 
@@ -190,24 +413,93 @@ function handleLogin(req, res){
         let username = data.get("username");
         let password = data.get("password");
 
-// simple error checking: username and password must exist
-	if(!username || !password){
-	    res.writeHead(400, {'content-type':'application/json'});
-	    res.end(JSON.stringify({status:"fail", message:"username and password required"}));
-	    return;
-	}
-
-        let found = userData.users.find(u => u.username === username && u.password === password);
-        if(found){
-            res.writeHead(200, {'content-type':'application/json'});
-            res.end(JSON.stringify({status:"ok"}));
-        } else {
-            res.writeHead(200, {'content-type':'application/json'});
-            res.end(JSON.stringify({status:"fail"}));
+        // simple error checking: username and password must exist
+        if(!username || !password){
+            res.writeHead(400, {'content-type':'application/json'});
+            res.end(JSON.stringify({status:"fail", message:"username and password required"}));
+            return;
         }
+
+        db.query(
+            "SELECT * FROM Users WHERE username = ? AND password = ?",
+            [username, password],
+            function(err, rows) {
+                if (err) {
+                    res.writeHead(500, {'content-type':'application/json'});
+                    res.end(JSON.stringify({status:"fail", message:"db error"}));
+                    return;
+                }
+
+                if (rows.length === 0) {
+                    res.writeHead(200, {'content-type':'application/json'});
+                    res.end(JSON.stringify({status:"fail"}));
+                    return;
+                }
+
+                let user = rows[0];
+
+                res.writeHead(200, {'content-type':'application/json'});
+                res.end(JSON.stringify({
+                    status: "ok",
+                    username: user.username,
+                    userId: user.userId,
+                    userType: user.userType
+                }));
+            }
+        );
     });
 }
-//Amir's Login Function ends
+
+function handleSignup(req, res) {
+    let body = "";
+    req.on("data", chunk => body += chunk);
+
+    req.on("end", () => {
+        let data = new URLSearchParams(body);
+
+        let username = data.get("username");
+        let password = data.get("password");
+        let userType = data.get("userType");
+
+        let fullName = data.get("fullName");
+        let email = data.get("email");
+        let phone = data.get("phone");
+        let address = data.get("address");
+
+        if (!username || !password || !userType) {
+            res.writeHead(400);
+            return res.end("Missing required fields");
+        }
+
+        db.query(
+            "SELECT * FROM Users WHERE username = ?",
+            [username],
+            function(err, rows) {
+                if (rows.length > 0) {
+                    res.writeHead(400);
+                    return res.end("Username already exists");
+                }
+
+                db.query(
+                    "INSERT INTO Users (username, password, userType, fullName, email, phone, address) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    [username, password, userType, fullName, email, phone, address],
+                    function(err2) {
+                        if (err2) {
+                            console.log(err2);
+                            res.writeHead(500);
+                            return res.end("DB error");
+                        }
+
+                        res.writeHead(200);
+                        res.end("ok");
+                    }
+                );
+            }
+        );
+    });
+}
+
+//Amir's code ends
 
 // Respond to requests
 function respond(res, status, message){
@@ -217,28 +509,31 @@ function respond(res, status, message){
 }
 
 // Send static files
+//Amir: (sprint 2) edited again due to query params messing with reading files
 //Amir: (FIXED) Issue with the line || let fname = "./public-html" + fPath; ||NEEDS TO CHANGE TO|| let fname = "./public_html" + fPath; ||BECAUSE|| the file directory uses an underscore 
 function sendFile(fPath, res){
-	let fname = "./public_html" + fPath;
-	fs.readFile(fname, function(err, data) {
-		if (err){
-			respond(res, 404, "File not found");
-			return;
-		}
-//Amir: Here you need to add return so the execution stops and headers are only sent once
-		else {
-			let ext = getContentType(fPath, res);
-			if (ext) {
-				res.writeHead(200, {'content-type': ext});
-				res.write(data);
-//Amir: (FIXED) The line above sending the file content should just be res.write(data) the initial res.writeHead sets the HTTP headers already
-				res.end();
-				return;
-			}
-		}
-	});
-}
+    let cleanPath = fPath.split("?")[0];
 
+    let fname = "./public_html" + cleanPath;
+
+    fs.readFile(fname, function(err, data) {
+        if (err){
+            respond(res, 404, "File not found");
+            return;
+        }
+//Amir: Here you need to add return so the execution stops and headers are only sent once
+	else {
+            let ext = getContentType(cleanPath, res); // use clean path
+            if (ext) {
+                res.writeHead(200, {'content-type': ext});
+                res.write(data);
+//Amir: (FIXED) The line above sending the file content should just be res.write(data) the initial res.writeHead sets the HTTP headers already
+		res.end();
+		return;
+            }
+        }
+    });
+}
 // Returns content type for HTTP header in sendFile
 function getContentType(pathname, res) {
 	switch (path.extname(pathname)) {
@@ -261,6 +556,214 @@ function getContentType(pathname, res) {
     		    return null;
 
 	}
+}
+
+function handleSendAdoptionRequest(req, res) {
+    let body = "";
+    req.on("data", chunk => body += chunk);
+
+    req.on("end", () => {
+        let data = new URLSearchParams(body);
+        let username = data.get("username");
+        let petId = data.get("petId");
+        let msgText = data.get("msgText");
+
+        db.query(
+            "SELECT userId FROM Users WHERE username = ?",
+            [username],
+            function (err, senderResult) {
+                if (err || senderResult.length === 0) {
+                    res.writeHead(400);
+                    return res.end("Invalid sender");
+                }
+
+                let senderId = senderResult[0].userId;
+
+                db.query(
+                    "SELECT shelterId FROM Pets WHERE petId = ?",
+                    [petId],
+                    function (err, petResult) {
+                        if (err || petResult.length === 0) {
+                            res.writeHead(400);
+                            return res.end("Invalid pet");
+                        }
+
+                        let shelterId = petResult[0].shelterId;
+
+                        db.query(
+                            "INSERT INTO Messages (senderId, recipientID, petId, msgText) VALUES (?, ?, ?, ?)",
+                            [senderId, shelterId, petId, msgText],
+                            function (err) {
+                                if (err) {
+                                    res.writeHead(500);
+                                    res.end("DB error");
+                                } else {
+                                    res.writeHead(200);
+                                    res.end("ok");
+                                }
+                            }
+                        );
+                    }
+                );
+            }
+        );
+    });
+}
+
+function handleGetInbox(req, res, q) {
+    let username = q.username;
+
+    db.query(
+        "SELECT userId FROM Users WHERE username = ?",
+        [username],
+        function (err, userResult) {
+            if (err || userResult.length === 0) {
+                res.writeHead(400);
+                return res.end("Invalid user");
+            }
+
+            let userId = userResult[0].userId;
+
+	    const sql = `
+	       SELECT
+		   m.messageId,
+        	   m.msgText,
+        	   m.senderId,
+        	   m.recipientID,
+        	   m.petId,
+        	   p.name AS petName,
+        	   COALESCE(u.username, m.formName, 'Unknown Sender') AS senderName,
+        	   m.senderId AS ownerId
+    	       FROM Messages m
+	       JOIN Pets p ON m.petId = p.petId
+               LEFT JOIN Users u ON m.senderId = u.userId
+               WHERE m.recipientID = ?
+               ORDER BY m.messageId ASC
+            `;
+
+
+            db.query(sql, [userId], function (err, results) {
+                if (err) {
+                    console.log("Inbox SQL Error:", err);
+                    res.writeHead(500);
+                    return res.end("DB error");
+                }
+
+                res.writeHead(200, { 'content-type': 'application/json' });
+                res.end(JSON.stringify(results));
+            });
+        }
+    );
+}
+
+//Amir: reply handler
+function handleSendReply(req, res) {
+    let body = "";
+    req.on("data", chunk => body += chunk);
+
+    req.on("end", () => {
+        let data = new URLSearchParams(body);
+
+        let senderId = parseInt(data.get("senderId"));
+        let recipientId = parseInt(data.get("recipientId"));
+        let msgText = data.get("msgText");
+        let petId = parseInt(data.get("petId"));
+
+        console.log("DEBUG REPLY RECEIVED:", {
+            senderId,
+            recipientId,
+            petId,
+            msgText
+        });
+
+        if (isNaN(senderId) || isNaN(recipientId) || isNaN(petId) || !msgText) {
+            console.log(" REPLY FAILED — Missing fields above");
+            res.writeHead(400);
+            return res.end("Missing fields");
+        }
+
+        db.query(
+            "INSERT INTO Messages (senderId, recipientID, petId, msgText, formName) VALUES (?, ?, ?, ?, NULL)",
+            [senderId, recipientId, petId, msgText],
+            function(err){
+                if(err){
+                    console.log(" REPLY DB ERROR:", err);
+                    res.writeHead(500);
+                    return res.end("DB error");
+                }
+
+                console.log(" REPLY SAVED SUCCESSFULLY");
+                res.writeHead(200);
+                res.end("ok");
+            }
+        );
+    });
+}
+
+//end of request and reply handlers
+
+//Amir: Login and shelter page handlers
+function handleGetUserProfile(req, res, q) {
+    let userId = q.userId;
+
+    db.query(
+        "SELECT username, userType, fullName, email, phone, address FROM Users WHERE userId = ?",
+        [userId],
+        (err, rows) => {
+            if (err) {
+                res.writeHead(500, {'content-type': 'application/json'});
+                return res.end(JSON.stringify({status: "error"}));
+            }
+
+            if (rows.length === 0) {
+                res.writeHead(404, {'content-type': 'application/json'});
+                return res.end(JSON.stringify({status: "not_found"}));
+            }
+
+            res.writeHead(200, {'content-type': 'application/json'});
+            res.end(JSON.stringify(rows[0]));
+        }
+    );
+}
+
+function handleGetShelters(req, res) {
+    db.query("SELECT * FROM Shelters", (err, rows) => {
+        if (err) {
+            res.writeHead(500, {'content-type': 'application/json'});
+            return res.end(JSON.stringify({status: "error"}));
+        }
+
+        res.writeHead(200, {'content-type': 'application/json'});
+        res.end(JSON.stringify(rows));
+    });
+}
+
+function handleCreatePet(req, res) {
+    let body = "";
+    req.on("data", chunk => body += chunk);
+
+    req.on("end", () => {
+        let data = new URLSearchParams(body);
+
+        let name = data.get("name");
+        let age = data.get("age");
+        let type = data.get("petType");
+        let description = data.get("description");
+        let shelterId = data.get("shelterId");
+
+        db.query(
+            "INSERT INTO Pets (name, age, petType, description, shelterId) VALUES (?, ?, ?, ?, ?)",
+            [name, age, type, description, shelterId],
+            err => {
+                if (err) {
+                    res.writeHead(500);
+                    return res.end("DB error");
+                }
+                res.writeHead(200);
+                res.end("ok");
+            }
+        );
+    });
 }
 
 // Start server

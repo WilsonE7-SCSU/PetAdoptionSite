@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile – Web of Homes</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+
+        .navbar {
+            background-color: #0056b3;
+            padding: 12px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .nav-title {
+            font-size: 1.6em;
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 1em;
+            padding: 8px 14px;
+            border-radius: 4px;
+            transition: 0.2s ease-in-out;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255,255,255,0.25);
+        }
+
+        .page-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        .profile-box {
+            background-color: white;
+            padding: 25px;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #333;
+            text-align: center;
+        }
+
+        .info-row {
+            margin-bottom: 20px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .info-value {
+            font-size: 1.1em;
+            margin-top: 4px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: #0056b3;
+            color: white;
+            padding: 10px 18px;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: 0.2s;
+        }
+
+        .back-btn:hover {
+            background-color: #003f82;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <div class="nav-title">Web of Homes</div>
+        <div class="nav-links">
+            <a id="homeLink">Home</a>
+            <a href="/login.html">Logout</a>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="profile-box">
+            <h2>User Profile</h2>
+
+            <div class="info-row">
+                <div class="info-label">Username:</div>
+                <div class="info-value" id="username">Loading...</div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">Account Type:</div>
+                <div class="info-value" id="type">Loading...</div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">Full Name:</div>
+                <div class="info-value" id="fullName">Loading...</div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">Email:</div>
+                <div class="info-value" id="email">Loading...</div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">Phone:</div>
+                <div class="info-value" id="phone">Loading...</div>
+            </div>
+
+            <div class="info-row">
+                <div class="info-label">Address:</div>
+                <div class="info-value" id="address">Loading...</div>
+            </div>
+
+            <a class="back-btn" id="backBtn">Back</a>
+        </div>
+    </div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const username = params.get("username");
+const userId = params.get("userId");
+const userType = params.get("userType");
+
+document.getElementById("homeLink").href =
+    `/Homepage.html?username=${username}&userId=${userId}&userType=${userType}`;
+
+document.getElementById("backBtn").href =
+    `/Homepage.html?username=${username}&userId=${userId}&userType=${userType}`;
+
+fetch(`/api/getUserProfile?userId=${userId}`)
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("username").textContent = data.username;
+        document.getElementById("type").textContent = data.userType;
+        document.getElementById("fullName").textContent = data.fullName || "N/A";
+        document.getElementById("email").textContent = data.email || "N/A";
+        document.getElementById("phone").textContent = data.phone || "N/A";
+        document.getElementById("address").textContent = data.address || "N/A";
+    });
+</script>
+
+</body>
+</html>
+

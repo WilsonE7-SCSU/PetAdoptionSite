@@ -3,112 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Homepage</title>
+    <title>Web of Homes – Home</title>
+
     <style>
         body {
-            font-family: sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
         }
 
-        .header {
+        /* NAVBAR */
+        .navbar {
             background-color: #0056b3;
-            color: white;
-            padding: 10px 20px;
+            padding: 12px 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .banner {
-            background-color: #007bff;
             color: white;
-            text-align: center;
-            padding: 50px 20px;
-            font-size: 2em;
-            margin-bottom: 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
         }
 
-        .main-content {
-            padding: 20px;
-            max-width: 800px;
-            margin: auto;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
+        .nav-title {
+            font-size: 1.6em;
             font-weight: bold;
         }
 
-        select {
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            width: 100%;
-            max-width: 300px;
-            cursor: pointer;
-        }
-
-        .login-button {
-            background-color: #28a745;
+        .nav-links a {
             color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
             text-decoration: none;
-            display: inline-block;
+            margin-left: 20px;
+            font-size: 1em;
+            padding: 8px 14px;
+            border-radius: 4px;
+            transition: 0.2s ease-in-out;
         }
 
-        .login-button:hover {
-            background-color: #218838;
+        .nav-links a:hover {
+            background-color: rgba(255,255,255,0.25);
+        }
+
+        /* BANNER */
+        .banner {
+            text-align: center;
+            background: #007bff;
+            color: white;
+            padding: 60px 20px;
+            font-size: 2em;
+            margin-bottom: 30px;
+        }
+
+        /* CONTENT */
+        .content {
+            max-width: 900px;
+            margin: auto;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .menu-button {
+            padding: 18px;
+            background-color: #0056b3;
+            color: white;
+            text-decoration: none;
+            font-size: 1.1em;
+            border-radius: 6px;
+            transition: 0.2s;
+            display: block;
+        }
+
+        .menu-button:hover {
+            background-color: #003f82;
         }
     </style>
 </head>
+
 <body>
+    <!-- Amir: making it a navigation bar instead of the drop down its confusing like that-->
+    <div class="navbar">
+        <div class="nav-title">Web of Homes</div>
 
-    <header class="header">
-        <h1>Web of Homes</h1>
-         <div class="split-button-container">
-
-        <a href="login.html" class="split-button-option login-option">
-            Log In
-        </a>
-
-        <a href="Sign-up.html" class="split-button-option signup-option">
-            Sign Up
-        </a>
+        <div class="nav-links">
+            <a id="nav-pets" href="#">Pets</a>
+            <a id="nav-inbox" href="#">Inbox</a>
+            <a id="nav-shelters" href="#">Shelters</a>
+            <a id="nav-profile" href="#">Profile</a>
+            <a id="nav-logout" href="#" onclick="logout()">Logout</a>
+        </div>
     </div>
-    </header>
 
     <div class="banner">
         Adopt Your Dream Pet!
     </div>
 
-    <main class="main-content">
-        <h2>Navigate the Menu</h2>
-        <div class="form-group">
-            <select id="options" name="options">
-                <option value="option1">View Local Shelters</option>
-                <option value="option2">View Profile</option>
-                <option value="option3">Send Adoption Request</option>
-            </select>
+    <div class="content">
+        <h2>Choose an option</h2>
+
+        <div class="button-grid">
+            <a id="btn-pets" class="menu-button" href="#">View Pets</a>
+            <a id="btn-inbox" class="menu-button" href="#">Inbox</a>
+            <a id="btn-shelters" class="menu-button" href="#">View Local Shelters</a>
+            <a id="btn-profile" class="menu-button" href="#">View Your Profile</a>
         </div>
-    </main>
+    </div>
+
+<script>
+    // Pull login data from URL
+    const params = new URLSearchParams(window.location.search);
+    const username = params.get("username");
+    const userId = params.get("userId");
+    const userType = params.get("userType");
+
+    // Helper to build URLs
+    function withParams(page) {
+        return `${page}?username=${username}&userId=${userId}&userType=${userType}`;
+    }
+
+    // Set nav links
+    document.getElementById("nav-pets").href = withParams("/pets");
+    document.getElementById("nav-inbox").href = withParams("/Inbox.html");
+    document.getElementById("nav-shelters").href = withParams("/shelters.html");
+    document.getElementById("nav-profile").href = withParams("/profile.html");
+
+    // Set button links
+    document.getElementById("btn-pets").href = withParams("/pets");
+    document.getElementById("btn-inbox").href = withParams("/Inbox.html");
+    document.getElementById("btn-shelters").href = withParams("/shelters.html");
+    document.getElementById("btn-profile").href = withParams("/profile.html");
+
+    // Logout function
+    function logout() {
+        localStorage.clear();
+        window.location.href = "/login.html";
+    }
+</script>
 
 </body>
 </html>
-

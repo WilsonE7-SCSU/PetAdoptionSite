@@ -1,56 +1,175 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Pet Gallery</title>
-        <link rel="stylesheet" href="./pet_gallery.css">
-        <script src="./adopt.js"></script>
-    </head>
-    <body onload="loadImgs()">
-        <div id="banner">
-            <h1>Web of Homes</h1>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Pets – Web of Homes</title>
+
+    <style>
+        body {
+            margin: 0;
+            background-color: #eef1f5;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            background-color: #0056b3;
+            padding: 14px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .nav-title {
+            font-size: 1.6em;
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 25px;
+            font-size: 1em;
+            padding: 8px 14px;
+            border-radius: 4px;
+            transition: 0.2s ease-in-out;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255,255,255,0.25);
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 30px;
+            color: #333;
+        }
+
+        .grid-container {
+            max-width: 1200px;
+            margin: 25px auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 22px;
+            padding: 0 20px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: 0.25s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+        }
+
+        .card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 15px 18px;
+        }
+
+        .card-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 6px;
+        }
+
+        .card-info {
+            font-size: 0.95em;
+            color: #555;
+            margin-bottom: 12px;
+        }
+
+        .view-btn {
+            display: inline-block;
+            background-color: #0056b3;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: 0.2s ease;
+            cursor: pointer;
+        }
+
+        .view-btn:hover {
+            background-color: #003f82;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <div class="nav-title">Web of Homes</div>
+        <div class="nav-links">
+            <a id="nav-home" href="#">Home</a>
+            <a id="nav-profile" href="#">Profile</a>
         </div>
-        <hr>
-        <div id="nav">
-            <button type="button" class="button" onclick="">Find Shelters</button><br>
-            <button type="button" class="button" onclick="">Message Inbox</button><br>
-        </div>
-        <div id="img_container">
-            <div id="r1c1">
-                <img onclick="storeAndGo(event)">
-                <span class="tooltip"></span>
-            </div>
-            <div id="r1c2">
-                <img onclick="storeAndGo(event)">
-                <span class="tooltip"></span>
-            </div>
-            <div id="r1c3">
-                <img onclick="storeAndGo(event)">
-                <span class="tooltip"></span>
-            </div>
-            <div id="r2c1">
-                <img onclick="storeAndGo(event)">
-                <span class="tooltip"></span>
-            </div>
-            <div id="r2c2">
-                <img onclick="storeAndGo(event)">
-                <span class="tooltip"></span>
-            </div>
-            <div id="r2c3">
-                <img onclick="storeAndGo(event)">
-                <span class="tooltip"></span>
-            </div>
-            <div id="r3c1">
-                <img onclick="storeAndGo(event)">
-                <span class="tooltip"></span>
-            </div>
-            <div id="r3c2">
-                <img onclick="storeAndGo(event)">
-                <span class="tooltip"></span>
-            </div>
-            <div id="r3c3">
-                <img onclick="storeAndGo(event)">
-                <span class="tooltip"></span>
+    </div>
+
+    <h2>Available Pets</h2>
+
+    <div class="grid-container">
+
+        <div class="card">
+            <img src="/images/ace.jpg" alt="Ace">
+            <div class="card-body">
+                <div class="card-title">Ace</div>
+                <div class="card-info">Dog • 2 years old</div>
+                <a class="view-btn" id="link-ace">View Profile</a>
             </div>
         </div>
-    </body>
+
+        <div class="card">
+            <img src="/images/cleo.jpg" alt="Cleo">
+            <div class="card-body">
+                <div class="card-title">Cleo</div>
+                <div class="card-info">Cat • 1 year old</div>
+                <a class="view-btn" id="link-cleo">View Profile</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <img src="/images/bowser.jpg" alt="Bowser">
+            <div class="card-body">
+                <div class="card-title">Bowser</div>
+                <div class="card-info">Dog • 4 years old</div>
+                <a class="view-btn" id="link-bowser">View Profile</a>
+            </div>
+        </div>
+
+    </div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const username = params.get("username");
+const userId = params.get("userId");
+const userType = params.get("userType");
+
+function withParams(url) {
+    return `${url}&username=${username}&userId=${userId}&userType=${userType}`;
+}
+
+document.getElementById("nav-home").href = `/Homepage.html?username=${username}&userId=${userId}&userType=${userType}`;
+document.getElementById("nav-profile").href = `/profile.html?username=${username}&userId=${userId}&userType=${userType}`;
+document.getElementById("nav-logout").href = "/logout";
+
+document.getElementById("link-ace").href = withParams("/profiles?name=Ace");
+document.getElementById("link-cleo").href = withParams("/profiles?name=Cleo");
+document.getElementById("link-bowser").href = withParams("/profiles?name=Bowser");
+</script>
+
+</body>
 </html>

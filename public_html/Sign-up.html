@@ -1,23 +1,57 @@
+<!--Amir: Also slightly updated to actually work with the database -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up Form</title>
+    <title>Web of Homes – Sign Up</title>
     <style>
         body {
-            font-family: sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            font-family: Arial, sans-serif;
             margin: 0;
             background-color: #f4f4f9;
         }
 
+        .navbar {
+            background-color: #0056b3;
+            padding: 12px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+
+        .nav-title {
+            font-size: 1.6em;
+            font-weight: bold;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 1em;
+            padding: 8px 14px;
+            border-radius: 4px;
+            transition: 0.2s ease-in-out;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255,255,255,0.25);
+        }
+
+        .page-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 64px);
+            padding: 20px;
+        }
+
         .signup-container {
             background-color: white;
-            padding: 40px;
+            padding: 30px;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             width: 100%;
@@ -31,12 +65,12 @@
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: bold;
             color: #555;
         }
@@ -47,11 +81,11 @@
         input[type="password"],
         textarea {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            box-sizing: border-box; /* Ensures padding doesn't affect width */
-            font-size: 16px;
+            box-sizing: border-box;
+            font-size: 15px;
         }
 
         input:focus, textarea:focus {
@@ -62,49 +96,124 @@
         .submit-btn {
             width: 100%;
             padding: 12px;
-            background-color: #007bff;
+            background-color: #0056b3;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 18px;
-            margin-top: 15px;
+            font-size: 17px;
+            margin-top: 10px;
         }
 
         .submit-btn:hover {
-            background-color: #0056b3;
+            background-color: #003f82;
+        }
+
+        .link-row {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+
+        .link-row a {
+            color: #0056b3;
+            text-decoration: none;
+        }
+
+        .link-row a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
-    <div class="signup-container">
-        <h2>Create an Account</h2>
-        <form action="#" method="POST">
-            <div class="form-group">
-                <label for="name">Full Name</label>
-                <input type="text" id="name" name="name" required>
-            </div>
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div class="form-group">
-                <label for="phone">Phone Number</label>
-                <input type="tel" id="phone" name="phone" placeholder="e.g., 123-456-7890" required>
-            </div>
-            <div class="form-group">
-                <label for="address">Full Address</label>
-                <textarea id="address" name="address" rows="3" required></textarea>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit" class="submit-btn">Sign Up</button>
-        </form>
+    <div class="navbar">
+        <div class="nav-title">Web of Homes</div>
+        <div class="nav-links">
+            <a href="/login.html">Login</a>
+        </div>
     </div>
+
+    <div class="page-wrapper">
+        <div class="signup-container">
+            <h2>Create an Account</h2>
+            <form id="signupForm" method="POST">
+                
+                <div class="form-group">
+                    <label for="username">Choose a Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Choose a Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="userType">Account Type</label>
+                    <select id="userType" name="userType" required>
+                        <option value="">-- Select Type --</option>
+                        <option value="Pet Owner">Pet Owner</option>
+                        <option value="Shelter">Shelter</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="fullName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Full Address</label>
+                    <textarea id="address" rows="3" required></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Sign Up</button>
+            </form>
+
+            <div class="link-row">
+                Already have an account? <a href="/login.html">Login</a>
+            </div>
+        </div>
+    </div>
+
+<script>
+// Send signup request to server
+document.getElementById("signupForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    let form = new URLSearchParams();
+    form.append("username", document.getElementById("username").value);
+    form.append("password", document.getElementById("password").value);
+    form.append("userType", document.getElementById("userType").value);
+    form.append("fullName", document.getElementById("name").value);
+    form.append("email", document.getElementById("email").value);
+    form.append("phone", document.getElementById("phone").value);
+    form.append("address", document.getElementById("address").value);
+
+    let res = await fetch("/signup", {
+        method: "POST",
+        body: form
+    });
+
+    let msg = await res.text();
+    if (msg === "ok") {
+        window.location.href = "/login.html?created=true";
+    } else {
+        alert("Signup failed: " + msg);
+    }
+});
+</script>
 
 </body>
 </html>
-

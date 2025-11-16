@@ -1,9 +1,8 @@
-<!--Inbox Menu Landing Page (Adam I edited this heavily, it wasn't working -Amir)-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Web of Homes – Inbox</title>
+    <title>Web of Homes – Local Shelters</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
@@ -12,7 +11,6 @@
             font-family: Arial, sans-serif;
             background: #f7f7f7;
         }
-
         .navbar {
             background-color: #0056b3;
             padding: 12px 25px;
@@ -22,12 +20,10 @@
             color: white;
             box-shadow: 0 2px 6px rgba(0,0,0,0.15);
         }
-
         .nav-title {
             font-size: 1.6em;
             font-weight: bold;
         }
-
         .nav-links a {
             color: white;
             text-decoration: none;
@@ -35,73 +31,36 @@
             font-size: 1em;
             padding: 8px 14px;
             border-radius: 4px;
-            transition: 0.2s ease-in-out;
+            transition: 0.2s ease;
         }
-
         .nav-links a:hover {
             background-color: rgba(255,255,255,0.25);
         }
-
         .page-wrapper {
-            max-width: 850px;
-            margin: 30px auto;
+            max-width: 800px;
+            margin: 25px auto;
             padding: 0 15px 30px;
         }
-
-        #message-list {
-            background: white;
+        h2 {
+            margin-top: 10px;
+        }
+        .shelter-card {
+            background:#fff;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            padding: 12px;
+            padding: 15px 18px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
         }
-
-        .msg-item {
-            padding: 14px;
-            border-bottom: 1px solid #eee;
-            cursor: pointer;
+        .shelter-name {
+            font-weight: bold;
+            font-size: 1.1em;
         }
-
-        .msg-item:last-child {
-            border-bottom: none;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .msg-body {
-            margin-top: 12px;
-            padding: 12px;
-            background: #fafafa;
-            border-radius: 6px;
-        }
-
-        .reply-text {
-            width: 100%;
-            height: 80px;
-            padding: 10px;
-            resize: vertical;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-
-        .send-reply-btn {
-            margin-top: 8px;
-            padding: 10px 16px;
-            background-color: #0056b3;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .send-reply-btn:hover {
-            background-color: #003f82;
+        .shelter-info {
+            margin-top: 5px;
+            color:#555;
         }
     </style>
 </head>
-
 <body>
 
     <div class="navbar">
@@ -114,10 +73,32 @@
     </div>
 
     <div class="page-wrapper">
-        <h1>Your Messages</h1>
+        <h2>Local Partner Shelters</h2>
 
-        <div id="message-list"></div>
 
+        <div class="shelter-card">
+            <div class="shelter-name">Happy Paws</div>
+            <div class="shelter-info">
+                Location: New Haven, CT<br>
+                Email: contact@happypaws.org
+            </div>
+        </div>
+
+        <div class="shelter-card">
+            <div class="shelter-name">Cozy Critters</div>
+            <div class="shelter-info">
+                Location: Hamden, CT<br>
+                Email: hello@cozycritters.org
+            </div>
+        </div>
+
+        <div class="shelter-card">
+            <div class="shelter-name">Forever Friends</div>
+            <div class="shelter-info">
+                Location: Hartford, CT<br>
+                Email: info@foreverfriends.org
+            </div>
+        </div>
     </div>
 
 <script>
@@ -127,15 +108,14 @@ const userId = params.get("userId");
 const userType = params.get("userType");
 
 function withParams(page) {
-    return `${page}?username=${username}&userId=${userId}&userType=${userType}`;
+    if (!username) return page;
+    return `${page}?username=${username}&userId=${userId || ""}&userType=${encodeURIComponent(userType || "")}`;
 }
 
 document.getElementById("nav-home").href = withParams("/Homepage.html");
 document.getElementById("nav-pets").href = withParams("/pets");
 document.getElementById("nav-inbox").href = withParams("/Inbox.html");
 </script>
-
-<script src="js/Inbox_System.js"></script>
 
 </body>
 </html>
