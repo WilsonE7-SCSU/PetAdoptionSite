@@ -128,7 +128,7 @@
             <div class="card-body">
                 <div class="card-title">Ace</div>
                 <div class="card-info">Dog • 2 years old</div>
-                <a class="view-btn" id="link-ace">View Profile</a>
+                <a class="view-btn" id="link-ace" href="/profiles?name=Ace">View Profile</a>
             </div>
         </div>
 
@@ -137,7 +137,7 @@
             <div class="card-body">
                 <div class="card-title">Cleo</div>
                 <div class="card-info">Cat • 1 year old</div>
-                <a class="view-btn" id="link-cleo">View Profile</a>
+                <a class="view-btn" id="link-cleo" href="/profiles?name=Cleo">View Profile</a>
             </div>
         </div>
 
@@ -146,7 +146,7 @@
             <div class="card-body">
                 <div class="card-title">Bowser</div>
                 <div class="card-info">Dog • 4 years old</div>
-                <a class="view-btn" id="link-bowser">View Profile</a>
+                <a class="view-btn" id="link-bowser" href="/profiles?name=Bowser">View Profile</a>
             </div>
         </div>
 
@@ -166,9 +166,9 @@ document.getElementById("nav-home").href = `/Homepage.html?username=${username}&
 document.getElementById("nav-profile").href = `/profile.html?username=${username}&userId=${userId}&userType=${userType}`;
 document.getElementById("nav-logout").href = "/logout";
 
-document.getElementById("link-ace").href = withParams("/profiles?name=Ace");
-document.getElementById("link-cleo").href = withParams("/profiles?name=Cleo");
-document.getElementById("link-bowser").href = withParams("/profiles?name=Bowser");
+//document.getElementById("link-ace").href = withParams("/profiles?name=Ace");
+//document.getElementById("link-cleo").href = withParams("/profiles?name=Cleo");
+//document.getElementById("link-bowser").href = withParams("/profiles?name=Bowser");
 </script>
 
 </body>
