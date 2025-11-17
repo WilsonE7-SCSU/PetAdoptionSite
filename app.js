@@ -549,6 +549,9 @@ function getContentType(pathname, res) {
 		case ".json":
 			return "application/json";
 			break;
+		case ".jpg":
+			return "image/jpeg";
+			break;
 		default:
 		// unknown file type error check
     		    console.log("Unsupported file type requested:", path.extname(pathname));
