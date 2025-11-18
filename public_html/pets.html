@@ -116,6 +116,7 @@
         <div class="nav-links">
             <a id="nav-home" href="#">Home</a>
             <a id="nav-profile" href="#">Profile</a>
+            <a id="nav-logout" href="/login.html">Logout</a>
         </div>
     </div>
 
@@ -128,7 +129,7 @@
             <div class="card-body">
                 <div class="card-title">Ace</div>
                 <div class="card-info">Dog • 2 years old</div>
-                <a class="view-btn" id="link-ace" href="/profiles?name=Ace">View Profile</a>
+                <a class="view-btn" id="link-ace">View Profile</a>
             </div>
         </div>
 
@@ -137,7 +138,7 @@
             <div class="card-body">
                 <div class="card-title">Cleo</div>
                 <div class="card-info">Cat • 1 year old</div>
-                <a class="view-btn" id="link-cleo" href="/profiles?name=Cleo">View Profile</a>
+                <a class="view-btn" id="link-cleo">View Profile</a>
             </div>
         </div>
 
@@ -146,7 +147,7 @@
             <div class="card-body">
                 <div class="card-title">Bowser</div>
                 <div class="card-info">Dog • 4 years old</div>
-                <a class="view-btn" id="link-bowser" href="/profiles?name=Bowser">View Profile</a>
+                <a class="view-btn" id="link-bowser">View Profile</a>
             </div>
         </div>
 
@@ -158,17 +159,17 @@ const username = params.get("username");
 const userId = params.get("userId");
 const userType = params.get("userType");
 
-function withParams(url) {
-    return `${url}&username=${username}&userId=${userId}&userType=${userType}`;
+function withParams(page) {
+    return `${page}?username=${username}&userId=${userId}&userType=${userType}`;
 }
 
-document.getElementById("nav-home").href = `/Homepage.html?username=${username}&userId=${userId}&userType=${userType}`;
-document.getElementById("nav-profile").href = `/profile.html?username=${username}&userId=${userId}&userType=${userType}`;
-document.getElementById("nav-logout").href = "/logout";
+document.getElementById("nav-home").href = withParams("/Homepage.html");
+document.getElementById("nav-profile").href = withParams("/profile.html");
 
-//document.getElementById("link-ace").href = withParams("/profiles?name=Ace");
-//document.getElementById("link-cleo").href = withParams("/profiles?name=Cleo");
-//document.getElementById("link-bowser").href = withParams("/profiles?name=Bowser");
+// PET LINK INJECTIONS
+document.getElementById("link-ace").href    = withParams("/profiles") + "&name=Ace";
+document.getElementById("link-cleo").href   = withParams("/profiles") + "&name=Cleo";
+document.getElementById("link-bowser").href = withParams("/profiles") + "&name=Bowser";
 </script>
 
 </body>
