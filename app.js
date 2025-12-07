@@ -115,6 +115,9 @@ const myServer = http.createServer(function(req, res) {
 		case "/api/createPet":
     			handleCreatePet(req, res);
     			break;
+		case "/api/pets":
+			queryPets(req, res);
+			break;
 		default:
 			sendFile(urlObj.pathname, res);
 			break;
@@ -122,6 +125,20 @@ const myServer = http.createServer(function(req, res) {
 			// Should probably be something else instead to handle errors
 	}
 });
+
+// Function to send all pet info to client and load pet grid dynamically
+function queryPets(req, res) {
+	db.query('SELECT name, petType, age, img_path FROM Pets', function(err, results) {
+            if (err) {
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Failed to fetch pets' }));
+                return;
+            }
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(results));
+        });
+        return;
+}
 
 // TODO: Creates and sends a pet's profile (Amir: Updated to incorporate more pet info and also update style)
 function getPetProfile(qObj, res) {
