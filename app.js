@@ -141,6 +141,7 @@ function queryPets(req, res) {
 }
 
 // TODO: Creates and sends a pet's profile (Amir: Updated to incorporate more pet info and also update style)
+// Creates and sends a pet's profile (with login params preserved)
 function getPetProfile(qObj, res) {
     let petName = qObj.name;
 
@@ -175,6 +176,7 @@ function getPetProfile(qObj, res) {
 
         let pet = rows[0];
 
+        // Build the page
         let html = `
 <!DOCTYPE html>
 <html>
@@ -202,6 +204,7 @@ function getPetProfile(qObj, res) {
             color: white;
             text-decoration: none;
             margin-left: 20px;
+            font-size: 18px;
         }
 
         .container {
@@ -273,7 +276,8 @@ function getPetProfile(qObj, res) {
 <div class="navbar">
     Web of Homes
     <div>
-        <a href="/Homepage.html">Home</a>
+        <a href="/Homepage.html?username=${qObj.username}&userId=${qObj.userId}&userType=${qObj.userType}">Home</a>
+        <a href="/profile.html?username=${qObj.username}&userId=${qObj.userId}&userType=${qObj.userType}">Profile</a>
         <a href="/login.html">Logout</a>
     </div>
 </div>
@@ -299,27 +303,27 @@ function getPetProfile(qObj, res) {
     <h3 style="margin-top: 30px;">Adoption Request Form</h3>
 
     <form action="/submit-adoption" method="GET">
-    	<input type="hidden" name="pet" value="${pet.name}">
-    	<input type="hidden" name="userId" value="${qObj.userId}">
-    	<input type="hidden" name="username" value="${qObj.username}">
 
-    	<label>Your Name:</label>
-    	<input type="text" name="fullname" required>
+        <input type="hidden" name="pet" value="${pet.name}">
+        <input type="hidden" name="userId" value="${qObj.userId}">
+        <input type="hidden" name="username" value="${qObj.username}">
 
-    	<label>Email:</label>
-    	<input type="email" name="email" required>
+        <label>Your Name:</label>
+        <input type="text" name="fullname" required>
 
-    	<label>Phone:</label>
-    	<input type="tel" name="phone" required>
+        <label>Email:</label>
+        <input type="email" name="email" required>
 
-    	<label>Message:</label>
-    	<textarea name="message" rows="4" required></textarea>
+        <label>Phone:</label>
+        <input type="tel" name="phone" required>
 
-    	<button class="btn" type="submit">Submit Adoption Request</button>
+        <label>Message:</label>
+        <textarea name="message" rows="4" required></textarea>
+
+        <button class="btn" type="submit">Submit Adoption Request</button>
     </form>
 
-
-    <a class="back-link" href="/pets">Back to Pets</a>
+    <a class="back-link" href="/pets?username=${qObj.username}&userId=${qObj.userId}&userType=${qObj.userType}">Back to Pets</a>
 </div>
 
 </body>
@@ -330,7 +334,6 @@ function getPetProfile(qObj, res) {
         res.end(html);
     });
 }
-
 
 //handles adotption form submissions (updated)
 function handleAdoptionRequest(qObj, res){
