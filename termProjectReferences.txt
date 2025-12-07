@@ -1,0 +1,9 @@
+References:
+ChatGPT was used to generate insert statements for sample data in the database.
+Sample data and feature code from the pet gallery feature was modified from a project I (Evan Wilson) completed
+in CSC235.
+
+Microsoft Copilot was used to build the dynamic pet gallery and its backend route (/api/pets). The prompt was
+fine-tuned to use only concepts we learned in class and to match the rest of the project's code.
+(The only exception to this is the use of the onReadyStateChange property of the AJAX request, but I used this property
+in my CSC235 project, so it is not unfamiliar to me.)
