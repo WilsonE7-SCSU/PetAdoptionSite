@@ -145,7 +145,8 @@
             </div>
         </div>
     </div>
-<!--Amir's login script-->
+
+<!--Amir's login script with session storage-->
 <script>
 document.getElementById("loginForm").addEventListener("submit", async function(e) {
     e.preventDefault();
@@ -161,6 +162,12 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     let result = await res.json();
 
     if (result.status === "ok") {
+        localStorage.setItem("wohUser", JSON.stringify({
+            username: result.username,
+            userId: result.userId,
+            userType: result.userType
+        }));
+
         window.location.href =
             `/Homepage.html?username=${encodeURIComponent(result.username)}&userId=${result.userId}&userType=${encodeURIComponent(result.userType)}`;
     } else {

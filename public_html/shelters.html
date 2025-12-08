@@ -75,7 +75,6 @@
     <div class="page-wrapper">
         <h2>Local Partner Shelters</h2>
 
-
         <div class="shelter-card">
             <div class="shelter-name">Happy Paws</div>
             <div class="shelter-info">
@@ -102,19 +101,47 @@
     </div>
 
 <script>
-const params = new URLSearchParams(window.location.search);
-const username = params.get("username");
-const userId = params.get("userId");
-const userType = params.get("userType");
+function ensureSession() {
+    const params = new URLSearchParams(window.location.search);
+    let username = params.get("username");
+    let userId = params.get("userId");
+    let userType = params.get("userType");
 
-function withParams(page) {
-    if (!username) return page;
-    return `${page}?username=${username}&userId=${userId || ""}&userType=${encodeURIComponent(userType || "")}`;
+    if (!username || !userId || !userType) {
+        const stored = JSON.parse(localStorage.getItem("wohUser") || "null");
+        if (stored) {
+            username = stored.username;
+            userId = stored.userId;
+            userType = stored.userType;
+
+            const newParams = new URLSearchParams({
+                username,
+                userId,
+                userType
+            });
+
+            history.replaceState(null, "", window.location.pathname + "?" + newParams.toString());
+        } else {
+            window.location.href = "/login.html";
+            return null;
+        }
+    }
+
+    return { username, userId, userType };
 }
 
-document.getElementById("nav-home").href = withParams("/Homepage.html");
-document.getElementById("nav-pets").href = withParams("/pets");
-document.getElementById("nav-inbox").href = withParams("/Inbox.html");
+const session = ensureSession();
+if (session) {
+    const { username, userId, userType } = session;
+
+    function withParams(page) {
+        return `${page}?username=${encodeURIComponent(username)}&userId=${userId}&userType=${encodeURIComponent(userType)}`;
+    }
+
+    document.getElementById("nav-home").href = withParams("/Homepage.html");
+    document.getElementById("nav-pets").href = withParams("/pets");
+    document.getElementById("nav-inbox").href = withParams("/Inbox.html");
+}
 </script>
 
 </body>

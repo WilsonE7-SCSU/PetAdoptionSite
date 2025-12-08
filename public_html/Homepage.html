@@ -12,7 +12,6 @@
             background: #f7f7f7;
         }
 
-        /* NAVBAR */
         .navbar {
             background-color: #0056b3;
             padding: 12px 25px;
@@ -42,7 +41,6 @@
             background-color: rgba(255,255,255,0.25);
         }
 
-        /* BANNER */
         .banner {
             text-align: center;
             background: #007bff;
@@ -52,7 +50,6 @@
             margin-bottom: 30px;
         }
 
-        /* CONTENT */
         .content {
             max-width: 900px;
             margin: auto;
@@ -114,30 +111,54 @@
     </div>
 
 <script>
-    // Pull login data from URL
-    const params = new URLSearchParams(window.location.search);
-    const username = params.get("username");
-    const userId = params.get("userId");
-    const userType = params.get("userType");
+    function ensureSession() {
+        const params = new URLSearchParams(window.location.search);
+        let username = params.get("username");
+        let userId = params.get("userId");
+        let userType = params.get("userType");
 
-    // Helper to build URLs
-    function withParams(page) {
-        return `${page}?username=${username}&userId=${userId}&userType=${userType}`;
+        if (!username || !userId || !userType) {
+            const stored = JSON.parse(localStorage.getItem("wohUser") || "null");
+            if (stored) {
+                username = stored.username;
+                userId = stored.userId;
+                userType = stored.userType;
+
+                const newParams = new URLSearchParams({
+                    username,
+                    userId,
+                    userType
+                });
+
+                history.replaceState(null, "", window.location.pathname + "?" + newParams.toString());
+            } else {
+                window.location.href = "/login.html";
+                return null;
+            }
+        }
+
+        return { username, userId, userType };
     }
 
-    // Set nav links
-    document.getElementById("nav-pets").href = withParams("/pets");
-    document.getElementById("nav-inbox").href = withParams("/Inbox.html");
-    document.getElementById("nav-shelters").href = withParams("/shelters.html");
-    document.getElementById("nav-profile").href = withParams("/profile.html");
+    const session = ensureSession();
+    if (session) {
+        const { username, userId, userType } = session;
 
-    // Set button links
-    document.getElementById("btn-pets").href = withParams("/pets");
-    document.getElementById("btn-inbox").href = withParams("/Inbox.html");
-    document.getElementById("btn-shelters").href = withParams("/shelters.html");
-    document.getElementById("btn-profile").href = withParams("/profile.html");
+        function withParams(page) {
+            return `${page}?username=${encodeURIComponent(username)}&userId=${userId}&userType=${encodeURIComponent(userType)}`;
+        }
 
-    // Logout function
+        document.getElementById("nav-pets").href = withParams("/pets");
+        document.getElementById("nav-inbox").href = withParams("/Inbox.html");
+        document.getElementById("nav-shelters").href = withParams("/shelters.html");
+        document.getElementById("nav-profile").href = withParams("/profile.html");
+
+        document.getElementById("btn-pets").href = withParams("/pets");
+        document.getElementById("btn-inbox").href = withParams("/Inbox.html");
+        document.getElementById("btn-shelters").href = withParams("/shelters.html");
+        document.getElementById("btn-profile").href = withParams("/profile.html");
+    }
+
     function logout() {
         localStorage.clear();
         window.location.href = "/login.html";
