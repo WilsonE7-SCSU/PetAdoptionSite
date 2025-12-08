@@ -116,7 +116,7 @@ const myServer = http.createServer(function(req, res) {
     			handleCreatePet(req, res);
     			break;
 		case "/api/pets":
-			queryPets(req, res);
+			handleQueryPets(res, urlObj.query);
 			break;
 		default:
 			sendFile(urlObj.pathname, res);
@@ -126,18 +126,42 @@ const myServer = http.createServer(function(req, res) {
 	}
 });
 
-// Function to send all pet info to client and load pet grid dynamically
-function queryPets(req, res) {
-	db.query('SELECT name, petType, age, img_path FROM Pets', function(err, results) {
-            if (err) {
-                res.writeHead(500, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ error: 'Failed to fetch pets' }));
-                return;
-            }
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify(results));
-        });
-        return;
+// Function to send pet info to client and load pet grid dynamically
+// Supports optional shelter filtering: /api/pets?shelterId=1 or shelterId=all
+function handleQueryPets(res, q) {
+    const shelterId = q && q.shelterId;
+
+    let sql = `
+        SELECT
+            p.petId,
+            p.name,
+            p.petType,
+            p.age,
+            p.img_path,
+            p.shelterId,
+            s.sName AS shelterName
+        FROM Pets p
+        LEFT JOIN Shelters s ON p.shelterId = s.shelterId
+    `;
+
+    const params = [];
+
+    if (shelterId && shelterId !== "all") {
+        sql += " WHERE p.shelterId = ?";
+        params.push(shelterId);
+    }
+
+    db.query(sql, params, function(err, results) {
+        if (err) {
+            console.log("handleQueryPets SQL error:", err);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Failed to fetch pets' }));
+            return;
+        }
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(results));
+    });
 }
 
 // TODO: Creates and sends a pet's profile (Amir: Updated to incorporate more pet info and also update style)
@@ -641,31 +665,36 @@ function handleGetInbox(req, res, q) {
         [username],
         function (err, userResult) {
             if (err || userResult.length === 0) {
+                console.log("handleGetInbox user lookup error:", err);
                 res.writeHead(400);
                 return res.end("Invalid user");
             }
 
             let userId = userResult[0].userId;
 
-	    const sql = `
-	       SELECT
-		   m.messageId,
-        	   m.msgText,
-        	   m.senderId,
-        	   m.recipientID,
-        	   m.petId,
-        	   p.name AS petName,
-        	   COALESCE(u.username, m.formName, 'Unknown Sender') AS senderName,
-        	   m.senderId AS ownerId
-    	       FROM Messages m
-	       JOIN Pets p ON m.petId = p.petId
-               LEFT JOIN Users u ON m.senderId = u.userId
-               WHERE m.recipientID = ?
-               ORDER BY m.messageId ASC
+            const sql = `
+               SELECT
+                   m.messageId,
+                   m.msgText,
+                   m.senderId,
+                   m.recipientID,
+                   m.petId,
+                   p.name AS petName,
+                   COALESCE(su.username, m.formName, 'Unknown Sender') AS senderName,
+                   COALESCE(ru.username, 'Unknown Recipient') AS recipientName,
+                   CASE
+                       WHEN m.recipientID = ? THEN 'in'
+                       ELSE 'out'
+                   END AS direction
+               FROM Messages m
+               JOIN Pets p ON m.petId = p.petId
+               LEFT JOIN Users su ON m.senderId = su.userId
+               LEFT JOIN Users ru ON m.recipientID = ru.userId
+               WHERE m.recipientID = ? OR m.senderId = ?
+               ORDER BY m.messageId DESC
             `;
 
-
-            db.query(sql, [userId], function (err, results) {
+            db.query(sql, [userId, userId, userId], function (err, results) {
                 if (err) {
                     console.log("Inbox SQL Error:", err);
                     res.writeHead(500);

@@ -99,7 +99,7 @@
         <div class="nav-title">Web of Homes</div>
         <div class="nav-links">
             <a id="homeLink">Home</a>
-            <a href="/login.html">Logout</a>
+            <a href="#" onclick="logout()">Logout</a>
         </div>
     </div>
 
@@ -142,29 +142,62 @@
     </div>
 
 <script>
-const params = new URLSearchParams(window.location.search);
-const username = params.get("username");
-const userId = params.get("userId");
-const userType = params.get("userType");
+function ensureSession() {
+    const params = new URLSearchParams(window.location.search);
+    let username = params.get("username");
+    let userId = params.get("userId");
+    let userType = params.get("userType");
 
-document.getElementById("homeLink").href =
-    `/Homepage.html?username=${username}&userId=${userId}&userType=${userType}`;
+    if (!username || !userId || !userType) {
+        const stored = JSON.parse(localStorage.getItem("wohUser") || "null");
+        if (stored) {
+            username = stored.username;
+            userId = stored.userId;
+            userType = stored.userType;
 
-document.getElementById("backBtn").href =
-    `/Homepage.html?username=${username}&userId=${userId}&userType=${userType}`;
+            const newParams = new URLSearchParams({
+                username,
+                userId,
+                userType
+            });
 
-fetch(`/api/getUserProfile?userId=${userId}`)
-    .then(res => res.json())
-    .then(data => {
-        document.getElementById("username").textContent = data.username;
-        document.getElementById("type").textContent = data.userType;
-        document.getElementById("fullName").textContent = data.fullName || "N/A";
-        document.getElementById("email").textContent = data.email || "N/A";
-        document.getElementById("phone").textContent = data.phone || "N/A";
-        document.getElementById("address").textContent = data.address || "N/A";
-    });
+            history.replaceState(null, "", window.location.pathname + "?" + newParams.toString());
+        } else {
+            window.location.href = "/login.html";
+            return null;
+        }
+    }
+
+    return { username, userId, userType };
+}
+
+const session = ensureSession();
+if (session) {
+    const { username, userId, userType } = session;
+
+    document.getElementById("homeLink").href =
+        `/Homepage.html?username=${encodeURIComponent(username)}&userId=${userId}&userType=${encodeURIComponent(userType)}`;
+
+    document.getElementById("backBtn").href =
+        `/Homepage.html?username=${encodeURIComponent(username)}&userId=${userId}&userType=${encodeURIComponent(userType)}`;
+
+    fetch(`/api/getUserProfile?userId=${userId}`)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("username").textContent = data.username;
+            document.getElementById("type").textContent = data.userType;
+            document.getElementById("fullName").textContent = data.fullName || "N/A";
+            document.getElementById("email").textContent = data.email || "N/A";
+            document.getElementById("phone").textContent = data.phone || "N/A";
+            document.getElementById("address").textContent = data.address || "N/A";
+        });
+}
+
+function logout() {
+    localStorage.clear();
+    window.location.href = "/login.html";
+}
 </script>
 
 </body>
 </html>
-

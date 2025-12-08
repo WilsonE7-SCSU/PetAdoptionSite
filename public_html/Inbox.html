@@ -43,20 +43,52 @@
         }
 
         .page-wrapper {
-            max-width: 850px;
+            max-width: 900px;
             margin: 30px auto;
             padding: 0 15px 30px;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 6px 12px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            background: #fff;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .filter-btn.active {
+            background: #0056b3;
+            color: #fff;
+            border-color: #0056b3;
+        }
+
+        .legend {
+            font-size: 0.85em;
+            color: #666;
         }
 
         #message-list {
             background: white;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            padding: 12px;
+            padding: 8px;
         }
 
         .msg-item {
-            padding: 14px;
+            padding: 10px 12px;
             border-bottom: 1px solid #eee;
             cursor: pointer;
         }
@@ -65,15 +97,62 @@
             border-bottom: none;
         }
 
+        .msg-header-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .msg-main {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75em;
+        }
+
+        .badge-in {
+            background: #e6f4ea;
+            color: #1e7b34;
+        }
+
+        .badge-out {
+            background: #e6f0ff;
+            color: #1a44b8;
+        }
+
+        .msg-title {
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+
+        .msg-meta {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .msg-preview {
+            font-size: 0.9em;
+            color: #444;
+            margin-top: 4px;
+        }
+
         .hidden {
             display: none;
         }
 
         .msg-body {
-            margin-top: 12px;
-            padding: 12px;
+            margin-top: 8px;
+            padding: 10px;
             background: #fafafa;
             border-radius: 6px;
+            font-size: 0.9em;
         }
 
         .reply-text {
@@ -84,19 +163,23 @@
             border-radius: 6px;
             border: 1px solid #ccc;
             box-sizing: border-box;
+            margin-top: 8px;
         }
 
-        .send-reply-btn {
+        .send-reply-btn,
+        .reply-btn {
             margin-top: 8px;
-            padding: 10px 16px;
+            padding: 8px 14px;
             background-color: #0056b3;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            font-size: 0.9em;
         }
 
-        .send-reply-btn:hover {
+        .send-reply-btn:hover,
+        .reply-btn:hover {
             background-color: #003f82;
         }
     </style>
@@ -115,6 +198,12 @@
 
     <div class="page-wrapper">
         <h1>Your Messages</h1>
+
+        <div class="toolbar">
+            <button class="filter-btn active" data-filter="all" id="btn-filter-all">All</button>
+            <button class="filter-btn" data-filter="in" id="btn-filter-in">Inbox</button>
+            <button class="filter-btn" data-filter="out" id="btn-filter-out">Sent</button>
+        </div>
 
         <div id="message-list"></div>
 
