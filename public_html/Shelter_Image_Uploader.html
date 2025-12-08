@@ -1,0 +1,90 @@
+//A widget that allows each shelter to upload an image of each registered pet, when they put them up for adoption.
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Button To Upload Files</title>
+    <style>
+        /* Hide the actual file*/
+        .file-input {
+            display: none; /* Keeps it functional, but it is invisible to the user */
+        }
+
+        
+        .file-label {
+            background-color: #007bff; 
+            color: white; 
+            padding: 10px 15px; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            display: inline-block; 
+            text-align: center;
+            transition: background-color 0.3s; 
+        }
+
+        
+        .file-label:hover {
+            background-color: #0056b3;
+        }
+
+        
+        .submit-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px; 
+        }
+
+        .submit-btn:hover {
+            background-color: #218838;
+        }
+
+        #file-name-display {
+            margin-top: 10px;
+            font-family: sans-serif;
+            font-size: 0.9em;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Button File Uploader</h2>
+
+<form action="/upload" method="post" enctype="multipart/form-data">
+    
+    <!-- 1. The actual input is now hidden, now with the 'accept' attribute -->
+    <input type="file" name="myfile" id="file-upload" class="file-input" 
+           accept=".jpg, .jpeg, .png, image/jpeg, image/png"
+           onchange="displayFileName(this.files)">
+
+    <!-- 2. The label acts as an interactable "button" -->
+    <label for="file-upload" class="file-label">
+        Choose a File (JPG or PNG)
+    </label>
+    
+    <!-- Added a section to show which file was selected -->
+    <div id="file-name-display">No file selected.</div>
+
+    <br>
+    
+    <input type="submit" value="Upload" class="submit-btn">
+</form>
+
+<!-- JS Function to update the display text when a file is chosen -->
+<script>
+    function displayFileName(files) {
+        const displayArea = document.getElementById('file-name-display');
+        if (files && files.length > 0) {
+            displayArea.textContent = 'Selected file: ' + files[0].name;
+        } else {
+            displayArea.textContent = 'No file selected.';
+        }
+    }
+</script>
+
+</body>
+</html>
+
